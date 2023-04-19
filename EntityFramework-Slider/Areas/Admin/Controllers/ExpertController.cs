@@ -79,6 +79,107 @@ namespace EntityFramework_Slider.Areas.Admin.Controllers
         }
 
 
+        public IActionResult Error(string msj)
+        {
+            ViewBag.error = msj;
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id is null) return BadRequest();
+
+            ExpertHeader expert = await _context.ExpertHeaders.FindAsync(id);
+
+            if (expert is null) return NotFound();
+
+            _context.ExpertHeaders.Remove(expert);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+
+
+        }
+
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SoftDelete(int? id)
+        {
+            if (id is null) return BadRequest();
+
+            ExpertHeader expert = await _context.ExpertHeaders.FindAsync(id);
+
+            if (expert is null) return NotFound();
+
+            expert.SoftDelete = true;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+
+
+        }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id is null) return BadRequest();     
+
+
+            ExpertHeader expert = await _context.ExpertHeaders.FindAsync(id);
+
+            if (expert is null) return NotFound();
+
+
+
+            return View(expert);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int? id, ExpertHeader expert)
+        {
+            if (id is null) return BadRequest();    
+
+
+            ExpertHeader dbExpert = await _context.ExpertHeaders.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
+
+            if (dbExpert is null) return NotFound();
+
+            if (dbExpert.Title.Trim().ToLower() == expert.Title.Trim().ToLower())
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        
+
+            _context.ExpertHeaders.Update(expert);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Detail(int? id)
+        {
+            if (id is null) return BadRequest();
+
+
+            ExpertHeader expert = await _context.ExpertHeaders.FindAsync(id);
+
+            if (expert is null) return NotFound();
+
+
+
+            return View(expert);
+        }
 
 
     }

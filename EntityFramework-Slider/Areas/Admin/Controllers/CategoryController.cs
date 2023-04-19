@@ -133,7 +133,7 @@ namespace EntityFramework_Slider.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int? id,Category category)
         {
-            if (id is null) return BadRequest();     // Eger Id null-sa BadRequest qaytar//
+            if (id is null) return BadRequest();    
 
        
             Category dbCategory = await _context.Categories.AsNoTracking().FirstOrDefaultAsync(m=>m.Id == id);
